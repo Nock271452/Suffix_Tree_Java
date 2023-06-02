@@ -1,2 +1,6 @@
-# Suffix_Tree_Java
-Suffix Tree Algorithm coded with Java.
+# **112資料探勘期末專題程式報告**
+### **學生：** 1410932028 張郢橦
+### **演算法：** Suffix Tree
+### **程式語言：** Java
+
+
