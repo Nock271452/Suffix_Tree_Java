@@ -1,59 +1,90 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
-    public static void main(String[] args) {
-        //讀取t2.txt檔案
-        String filename = "t2.txt";
-        List<String> data = readDataFromFile(filename);
-        Map<String, List<Integer>> suffixTree = buildSuffixTree(data);
-        printSuffixTree(suffixTree);
-    }
+public class Main{
+    public static void main(String args[]){
 
-    private static List<String> readDataFromFile(String filename) {
-        List<String> data = new ArrayList<>();
+        //Scanner宣告
+        Scanner scn = new Scanner(System.in);
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+        //Hashmap宣告
+        Map<Integer, String> NosetMap = new HashMap<>();
+        Map<String, String> datasetMap = new HashMap<>();
+
+        //獲得輸入資料
+        System.out.print("請輸入資料：");
+        String input = scn.next();
+
+        //Java例外處理
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("t2.txt"));
             String line;
-            while ((line = reader.readLine()) != null) {
-                data.add(line);
+
+            //先將編號與資料分開
+            int no = 1;
+            while((line = br.readLine()) != null){
+                String[] parts = line.split(":");
+                String title = parts[0].trim();
+                String data = parts[1].trim();
+                NosetMap.put(no,title);
+                datasetMap.put(title,data);
+                no++;
             }
-        } catch (IOException e) {
-            System.err.println("Error reading data from file: " + e.getMessage());
+        }
+        catch (IOException e){
+            e.printStackTrace();
         }
 
-        return data;
-    }
+        //為每一筆資料建樹並判斷內部是否有input資料群，若有則印出
+        int no = 1;
+        while(NosetMap.get(no)!=null){
+            SuffixTree suffixTree = new SuffixTree(datasetMap.get(NosetMap.get(no)));
+            boolean isIn = suffixTree.search(input);
 
-    private static Map<String, List<Integer>> buildSuffixTree(List<String> data) {
-        Map<String, List<Integer>> suffixTree = new HashMap<>();
-
-        for (String line : data) {
-            String[] parts = line.split(":");
-            String key = parts[0];
-            String[] values = parts[1].split(",");
-
-            List<Integer> suffixList = new ArrayList<>();
-            for (String value : values) {
-                suffixList.add(Integer.parseInt(value));
-            }
-
-            suffixTree.put(key, suffixList);
+            if (isIn)
+                System.out.printf(NosetMap.get(no) + ":" + datasetMap.get(NosetMap.get(no)) + "\r\n");
+            no++;
         }
 
-        return suffixTree;
+    }
+}
+
+class SuffixTreeNode{
+    Map<Character, SuffixTreeNode> children = new HashMap<>();
+}
+
+class SuffixTree{
+    SuffixTreeNode root;
+
+    public SuffixTree(String text){
+        root = new SuffixTreeNode();
+        buildSuffixTree(text);
     }
 
-    private static void printSuffixTree(Map<String, List<Integer>> suffixTree) {
-        for (Map.Entry<String, List<Integer>> entry : suffixTree.entrySet()) {
-            String key = entry.getKey();
-            List<Integer> suffixList = entry.getValue();
-
-            System.out.print(key + ": ");
-            for (Integer suffix : suffixList) {
-                System.out.print(suffix + " ");
-            }
-            System.out.println();
+    private void buildSuffixTree(String text){
+        for (int i=0;i<text.length();i++){
+            String suffix = text.substring(i);
+            insertSuffix(suffix,i);
         }
     }
+
+    private void insertSuffix(String suffix, int index){
+        SuffixTreeNode current = root;
+        for (char c : suffix.toCharArray()){
+            if(!current.children.containsKey(c))
+                current.children.put(c, new SuffixTreeNode());
+            current = current.children.get(c);
+        }
+    }
+
+    public boolean search(String pattern){
+        SuffixTreeNode current = root;
+        for (char c : pattern.toCharArray()){
+            if(!current.children.containsKey(c))
+                return false;
+            current = current.children.get(c);
+        }
+        return true;
+    }
+
 }
