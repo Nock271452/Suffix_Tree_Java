@@ -37,15 +37,20 @@ public class Main{
 
         //為每一筆資料建樹並判斷內部是否有input資料群，若有則印出
         int no = 1;
+        int counter = 0;
         while(NosetMap.get(no)!=null){
             SuffixTree suffixTree = new SuffixTree(datasetMap.get(NosetMap.get(no)));
             boolean isIn = suffixTree.search(input);
 
-            if (isIn)
+            if (isIn) {
                 System.out.printf(NosetMap.get(no) + ":" + datasetMap.get(NosetMap.get(no)) + "\r\n");
+                counter++;
+            }
             no++;
         }
 
+        if (counter!=0)
+            System.out.printf("計數:" + counter + "筆\r\n");
     }
 }
 

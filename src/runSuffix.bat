@@ -1,2 +1,4 @@
+:repeat
 java Main.java
-PAUSE
+
+GOTO repeat
