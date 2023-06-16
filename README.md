@@ -29,6 +29,22 @@ java Main.java
 
 </br>
 
+`runSuffix.bat`之批次檔命令如下
+```bat
+:repeat
+java Main.java
+
+GOTO repeat
+```
+因此在每次使用過後，Windows會執行迴圈再呼叫一次程式 \
+實現重複使用功能，但對於Java本程式而言，每次的運算都是獨立的
+
+</br>
+
 ## **實際使用情況**
 
-![Github]
+![Github](report_images/input.png)
+
+如上圖釋例，輸入資料後會印出有找到相對資料的資料集 \
+全部印出後，會顯示找到的資料集(count)數量 \
+由於每次使用
